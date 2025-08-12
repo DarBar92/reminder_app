@@ -8,6 +8,7 @@ QTableWidgetItem,
 )
 from add_reminder_dialog import Add_reminder_dialog
 from reminders_table import RemindersTable
+from notification_manager import NotificationManager
 
 class Reminder(QMainWindow):
     def __init__(self):
@@ -38,14 +39,18 @@ class Reminder(QMainWindow):
         if dialog.exec():
             name = dialog.name_input.text()
             frequency = dialog.frequency_input.text()
-            start_time = dialog.start_time_input.text()
-            end_time = dialog.end_time_input.text()
-            self.save_reminder(name, frequency, start_time, end_time)
+            frequency_type = dialog.frequency_input_type.currentText()
+            start_time = dialog.start_time_input.time()
+            end_time = dialog.end_time_input.time()
+            self.save_reminder(name, frequency, frequency_type, start_time.toString("HH:mm:ss"), end_time.toString("HH:mm:ss"))
+            notif_manager = NotificationManager()
+            notif_manager.schedule_notification(name, frequency, frequency_type, start_time, end_time)
             self.load_reminders()
 
-    def save_reminder(self, name, frequency, start_time, end_time):
+    def save_reminder(self, name, frequency, frequency_type, start_time, end_time):
         with open("reminders.csv", "a") as file:
-            file.write(f"{name},{frequency},{start_time},{end_time}\n")
+            file.write(f"{name},{frequency} {frequency_type},{start_time},{end_time}\n")
+
     
     def load_reminders(self):
         try:

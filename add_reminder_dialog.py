@@ -4,8 +4,12 @@ QHBoxLayout,
 QFormLayout, 
 QLineEdit,
 QDialog,
-QPushButton
+QPushButton,
+QComboBox,
+QTimeEdit,
 )
+from PyQt6.QtGui import QIntValidator
+
 class Add_reminder_dialog(QDialog):
     def __init__(self):
         super().__init__()
@@ -15,25 +19,26 @@ class Add_reminder_dialog(QDialog):
         layout = QVBoxLayout()
         # --- Form layout for input fields ---
         form_layout = QFormLayout()
-
         self.name_input = QLineEdit()
-        self.frequency_input = QLineEdit()
-        self.start_time_input = QLineEdit()
-        self.end_time_input = QLineEdit()
-
         form_layout.addRow("Name:", self.name_input)
-        form_layout.addRow("Frequency:", self.frequency_input)
+        frequency_input_layout = QHBoxLayout()
+        self.frequency_input = QLineEdit()
+        self.frequency_input.setValidator(QIntValidator())  # Ensure frequency is an integer
+        self.frequency_input_type = QComboBox()
+        self.frequency_input_type.addItems(["Seconds", "Minutes", "Hours"])
+        form_layout.addRow("Frequency:", frequency_input_layout)
+        frequency_input_layout.addWidget(self.frequency_input)
+        frequency_input_layout.addWidget(self.frequency_input_type)
+        self.start_time_input = QTimeEdit()
         form_layout.addRow("Start Time:", self.start_time_input)
+        self.end_time_input = QTimeEdit()
         form_layout.addRow("End Time:", self.end_time_input)
 
         button_layout = QHBoxLayout()
-
         self.submit_button = QPushButton("Submit")
         self.submit_button.clicked.connect(self.accept)
-
         self.cancel_button = QPushButton("Cancel")
         self.cancel_button.clicked.connect(self.reject)
-
         button_layout.addWidget(self.submit_button)
         button_layout.addWidget(self.cancel_button)
 
