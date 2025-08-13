@@ -6,6 +6,7 @@ QWidget,
 QLabel,
 QTableWidgetItem,
 )
+from PyQt6.QtCore import QTime
 from add_reminder_dialog import Add_reminder_dialog
 from reminders_table import RemindersTable
 from notification_manager import NotificationManager
@@ -42,15 +43,15 @@ class Reminder(QMainWindow):
             name = dialog.name_input.text()
             frequency = dialog.frequency_input.text()
             frequency_type = dialog.frequency_input_type.currentText()
-            start_time = dialog.start_time_input.time()
             sound_type = dialog.sound_type_input.currentText()
-            self.save_reminder(name, frequency, frequency_type, start_time.toString("HH:mm:ss"), sound_type) 
-            self.notification_manager.schedule_notification(name, frequency, frequency_type, start_time, sound_type)
+
+            self.save_reminder(name, frequency, frequency_type, sound_type) 
+            self.notification_manager.schedule_notification(name, frequency, frequency_type, sound_type)
             self.load_reminders()
 
-    def save_reminder(self, name, frequency, frequency_type, start_time, sound_type):
+    def save_reminder(self, name, frequency, frequency_type, sound_type):
         with open("reminders.csv", "a") as file:
-            file.write(f"{name},{frequency} {frequency_type},{start_time},{sound_type}\n")
+            file.write(f"{name},{frequency} {frequency_type},{sound_type}\n")
 
     
     def load_reminders(self):
@@ -66,6 +67,14 @@ class Reminder(QMainWindow):
                         self.reminders_table.table.insertRow(row_index)
                         for col, item in enumerate(columns):
                             self.reminders_table.table.setItem(row_index, col, QTableWidgetItem(item))
+
+                        name = columns[0]
+                        freq_and_type = columns[1].split()
+                        frequency = freq_and_type[0]
+                        frequency_type = freq_and_type[1]
+                        sound = columns[2]
+
+                        self.notification_manager.schedule_notification(name, frequency, frequency_type, sound)
                 else:
                     self.label.show()
                     self.reminders_table.hide()
