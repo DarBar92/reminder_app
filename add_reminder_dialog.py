@@ -31,8 +31,9 @@ class Add_reminder_dialog(QDialog):
         frequency_input_layout.addWidget(self.frequency_input_type)
         self.start_time_input = QTimeEdit()
         form_layout.addRow("Start Time:", self.start_time_input)
-        self.end_time_input = QTimeEdit()
-        form_layout.addRow("End Time:", self.end_time_input)
+        self.sound_type_input = QComboBox()
+        self.sound_type_input.addItems(["Posture", "Hydrate", "Beep"])
+        form_layout.addRow("Sound Type:", self.sound_type_input)
 
         button_layout = QHBoxLayout()
         self.submit_button = QPushButton("Submit")

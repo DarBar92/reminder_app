@@ -16,6 +16,8 @@ class Reminder(QMainWindow):
         self.setWindowTitle("Reminder App")
         self.setGeometry(100, 100, 600, 400)
 
+        self.notification_manager = NotificationManager()
+
         layout = QVBoxLayout()
 
         self.label = QLabel("There are no reminders set. Please click the button to set a reminder.")
@@ -41,15 +43,14 @@ class Reminder(QMainWindow):
             frequency = dialog.frequency_input.text()
             frequency_type = dialog.frequency_input_type.currentText()
             start_time = dialog.start_time_input.time()
-            end_time = dialog.end_time_input.time()
-            self.save_reminder(name, frequency, frequency_type, start_time.toString("HH:mm:ss"), end_time.toString("HH:mm:ss"))
-            notif_manager = NotificationManager()
-            notif_manager.schedule_notification(name, frequency, frequency_type, start_time, end_time)
+            sound_type = dialog.sound_type_input.currentText()
+            self.save_reminder(name, frequency, frequency_type, start_time.toString("HH:mm:ss"), sound_type) 
+            self.notification_manager.schedule_notification(name, frequency, frequency_type, start_time, sound_type)
             self.load_reminders()
 
-    def save_reminder(self, name, frequency, frequency_type, start_time, end_time):
+    def save_reminder(self, name, frequency, frequency_type, start_time, sound_type):
         with open("reminders.csv", "a") as file:
-            file.write(f"{name},{frequency} {frequency_type},{start_time},{end_time}\n")
+            file.write(f"{name},{frequency} {frequency_type},{start_time},{sound_type}\n")
 
     
     def load_reminders(self):
@@ -71,3 +72,8 @@ class Reminder(QMainWindow):
         except FileNotFoundError:
             self.label.show()
             self.reminders_table.hide()
+    
+    def closeEvent(self, event):
+        if hasattr(self, 'notification_manager'):
+            self.notification_manager.stop_all()
+        event.accept()

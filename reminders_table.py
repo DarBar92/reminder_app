@@ -10,7 +10,7 @@ class RemindersTable(QWidget):
         super().__init__()
 
         self.table = QTableWidget(0, 4)
-        self.table.setHorizontalHeaderLabels(["Name", "Frequency", "Start Time", "End Time"])
+        self.table.setHorizontalHeaderLabels(["Name", "Frequency", "Start Time", "Sound Type"])
 
         # Make columns stretch to fill the available space
         header = self.table.horizontalHeader()
