@@ -9,7 +9,7 @@ QComboBox,
 )
 from PyQt6.QtGui import QIntValidator
 
-class Add_reminder_dialog(QDialog):
+class AddReminderDialog(QDialog):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Add Reminder")

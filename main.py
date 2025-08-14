@@ -1,5 +1,5 @@
 import sys
-from main_app import Reminder
+from reminders import Reminder
 from PyQt6.QtWidgets import QApplication
 
 if __name__ == "__main__":
