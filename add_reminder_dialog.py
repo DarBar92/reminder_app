@@ -6,7 +6,6 @@ QLineEdit,
 QDialog,
 QPushButton,
 QComboBox,
-QTimeEdit,
 )
 from PyQt6.QtGui import QIntValidator
 
@@ -29,8 +28,6 @@ class Add_reminder_dialog(QDialog):
         form_layout.addRow("Frequency:", frequency_input_layout)
         frequency_input_layout.addWidget(self.frequency_input)
         frequency_input_layout.addWidget(self.frequency_input_type)
-        self.start_time_input = QTimeEdit()
-        form_layout.addRow("Start Time:", self.start_time_input)
         self.sound_type_input = QComboBox()
         self.sound_type_input.addItems(["Posture", "Hydrate", "Beep"])
         form_layout.addRow("Sound Type:", self.sound_type_input)

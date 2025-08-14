@@ -5,8 +5,8 @@ from PyQt6.QtMultimedia import QSoundEffect
 
 class NotificationManager:
     def __init__(self):
-        self.timers = []
-        self.tray_icon = QSystemTrayIcon(QIcon("icon.png"))  # Use a valid icon path
+        self.timers = {} 
+        self.tray_icon = QSystemTrayIcon(QIcon("Assets/Timer.png"))  # Use a valid icon path
         self.tray_icon.setVisible(True)
 
         self.sounds = []
@@ -46,15 +46,18 @@ class NotificationManager:
 
             QTimer.singleShot(5000, lambda: self.sounds.remove(sound))
 
+        if name in self.timers:
+            self.timers[name].stop()
+            del self.timers[name]
 
         periodic_timer = QTimer()
         periodic_timer.timeout.connect(lambda: [display_notification(), play_sound(sound)])
         periodic_timer.start(interval_ms)
 
-        self.timers.append(periodic_timer)
+        self.timers[name] = periodic_timer
 
     def stop_all(self):
-        for timer in self.timers:
+        for timer in self.timers.values():
             timer.stop()
         self.timers.clear()
         print("All timers stopped.")
@@ -64,4 +67,10 @@ class NotificationManager:
             self.tray_icon.deleteLater()
             self.tray_icon = None
             print("Tray icon removed.")
+    
+    def stop_reminder(self, name):
+        if name in self.timers:
+            self.timers[name].stop()
+            del self.timers[name]
+            print(f"Timer for '{name}' stopped")
 
